@@ -1,0 +1,64 @@
+"""
+WAEC to US GPA Converter
+Author: Uche Peace Anya
+Purpose: Convert WASSCE grades to US 4.0 GPA scale
+"""
+
+def get_grade_point(grade):
+    grade_scale = {'A1': 4.0, 'B2': 3.5, 'B3': 3.0, 'C4': 2.5, 'C5': 2.0, 
+                   'C6': 1.5, 'D7': 1.0, 'E8': 0.5, 'F9': 0.0}
+    return grade_scale.get(grade.upper(), None)
+
+def calculate_gpa():
+    print("=== WAEC to US GPA Converter ===")
+    print("Enter subjects and grades. Type 'done' when finished.\n")
+    
+    subjects = []
+    total_points = 0
+    stem_points = 0
+    stem_subjects = 0
+    stem_list = ['mathematics', 'physics', 'chemistry', 'biology', 'further mathematics']
+    
+    while True:
+        subject = input("Subject name (or 'done'): ").strip()
+        if subject.lower() == 'done':
+            break
+        if not subject:
+            print("Subject cannot be empty.")
+            continue
+            
+        grade = input(f"Grade for {subject} (A1-F9): ").strip().upper()
+        grade_point = get_grade_point(grade)
+        
+        if grade_point is None:
+            print("Invalid grade. Use A1-F9.")
+            continue
+            
+        subjects.append({'subject': subject, 'grade': grade, 'points': grade_point})
+        total_points += grade_point
+        
+        if subject.lower() in stem_list:
+            stem_points += grade_point
+            stem_subjects += 1
+        print(f"Added: {subject} - {grade} = {grade_point} points\n")
+    
+    if not subjects:
+        print("No subjects entered.")
+        return
+    
+    cumulative_gpa = round(total_points / len(subjects), 2)
+    stem_gpa = round(stem_points / stem_subjects, 2) if stem_subjects > 0 else 0
+    
+    print("\n" + "="*50)
+    print("           ACADEMIC REPORT")
+    print("="*50)
+    for sub in subjects:
+        print(f"{sub['subject']:<25} {sub['grade']:<8} {sub['points']}")
+    print("-"*50)
+    print(f"Cumulative GPA: {cumulative_gpa} / 4.0")
+    if stem_subjects > 0:
+        print(f"STEM GPA: {stem_gpa} / 4.0")
+    print("="*50)
+
+if __name__ == "__main__":
+    calculate_gpa()
